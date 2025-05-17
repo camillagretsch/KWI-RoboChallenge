@@ -1,45 +1,105 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Rangliste aus Excel</title>
-    <style>
-        table {
-            width: 50%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
+<html lang="de" style="padding-inline: 1rem;">
+    <head>
+        <meta charset="UTF-8">
+        <!-- SheetJS Bibliothek -->
+        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+        <!-- Deine externe JS-Datei -->
+        <script src="script.js"></script>
+        <title>KWI-RoboChallenge</title>
+        <style>
+            /* Tabbar */
+            .tab {
+                padding: 10px 20px;
+                cursor: pointer;
+                border: none;
+                background: none;
+                font-weight: bold;
+                border-bottom: 3px solid transparent;
+            }
 
-<h1>Rangliste Linienfolger 2025</h1>
+            .tab.active {
+                border-bottom: 3px solid #007BFF;
+                color: #007BFF;
+            }
 
-<table id="rankingTable">
-    <thead>
-        <tr>
-            <th>Rang</th>
-            <th>Gruppennummer</th>
-            <th>Zeit</th>
-            <th>Klasse</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+            /* Tab Inhalte */
+            .tab-content {
+                display: none;
+            }
 
-<!-- SheetJS Bibliothek -->
-<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-<!-- Deine externe JS-Datei -->
-<script src="script.js"></script>
+            .tab-content.active {
+                display: block;
+            }
 
-</body>
+            /* Tabelle */
+            table {
+                width: 50%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+
+            th, td {
+                border: 1px solid #aaa;
+                padding: 8px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>WKI-RoboChallenge 2025</h1>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="linienfolger">Linienfolger</button>
+            <button class="tab" data-tab="roboball">Roboball</button>
+            <button class="tab" data-tab="move-it-over">Move-it-over</button>
+            <button class="tab" data-tab="total">Gesamtwertung</button>
+        </div>
+
+          <!-- Inhalte -->
+        <div id="linienfolger" class="tab-content active">
+            <h2>Rangliste Linienfolger</h2>
+
+            <table id="rankingTableLinienfolger">
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Gruppennummer</th>
+                        <th>Zeit</th>
+                        <th>Klasse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="roboball" class="tab-content">
+            <p>Resultate Roboball</p>
+        </div>
+
+        <div id="move-it-over" class="tab-content">
+            <p>Resultate Move-it-over</p>
+        </div>
+
+        <div id="total" class="tab-content">
+            <h2>Rangliste Gesamtwertung</h2>
+
+            <table id="rankingTableTotal">
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Team</th>
+                        <th>Punkte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </body>
 </html>
