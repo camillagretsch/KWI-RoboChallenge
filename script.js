@@ -106,7 +106,7 @@ function renderTable(data) {
 // Liste aller Teams erstellen
 // ====================
 function createTeamsList(data) {
-    data.forEach(row => window.teams.push(row.Team.split("|").map(s => parseFloat(s.trim()))));
+    data.forEach(row => window.teams.push({team: row.Team.split("|").map(s => parseFloat(s.trim())), klasse: row.Klasse}));
 }
 
 // ====================
@@ -118,16 +118,18 @@ function createRanglisteTotal() {
 
     const rangliste = [];
 
-    window.teams.forEach(team => {
+    window.teams.forEach(row => {
         const rang = 1;
         let punkte = 0;
+        const team = row.team;
+        const klasse = row.klasse;
         team.forEach((member) =>  {
             punkte += window.linienfolgerDaten.filter(t => t.Gruppennummer === member)[0].Rang;
             // Ergänzen mit move-it-over und roboball
         });
         punkte = punkte/team.length;
         punkte = punkte.toFixed(1);
-        rangliste.push({team, punkte, rang});
+        rangliste.push({team, punkte, rang, klasse});
     });
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
@@ -140,7 +142,7 @@ function createRanglisteTotal() {
         }
 
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row.rang}</td><td>${row.team}</td><td>${row.punkte}</td>`;
+        tr.innerHTML = `<td>${row.rang}</td><td>${row.team}</td><td>${row.punkte}</td><td>${row.klasse}</td>`;
         tbody.appendChild(tr);
     });
 }
