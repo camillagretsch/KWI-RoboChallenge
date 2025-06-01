@@ -8,7 +8,21 @@
         <script src="script.js"></script>
         <title>KWI-RoboChallenge</title>
         <style>
+            .top-left-image {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                width: 8rem;
+            }
+
             /* Tabbar */
+            .tabs {
+                display: flex;
+                padding-right: 10rem;
+                justify-content: space-between;
+                font-size: 6rem;
+            }
+
             .tab {
                 padding: 10px 20px;
                 cursor: pointer;
@@ -51,11 +65,14 @@
         </style>
     </head>
     <body>
-        <h1>WKI-RoboChallenge 2025</h1>
+        <div>
+            <h1>KWI-RoboChallenge 2025</h1>
+            <img class="top-left-image" src="./logo.png" alt="Logo">
+        </div>
 
         <div class="tabs">
             <button class="tab active" data-tab="linienfolger">Linienfolger</button>
-            <button class="tab" data-tab="roboball">Roboball</button>
+            <button class="tab" data-tab="roboball">RoboBall</button>
             <button class="tab" data-tab="move-it-over">Move-it-over</button>
             <button class="tab" data-tab="total">Gesamtwertung</button>
         </div>
@@ -68,9 +85,9 @@
                 <thead>
                     <tr>
                         <th>Rang</th>
+                        <th>Klasse</th>
                         <th>Gruppennummer</th>
                         <th>Zeit</th>
-                        <th>Klasse</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,10 +96,305 @@
         </div>
 
         <div id="roboball" class="tab-content">
-            <p>Resultate Roboball</p>
+            <h2>Regeln</h2>
+            <ul>
+                <li>Gespielt wird in 2/3er Teams.</li>
+                <li>Eure Roboter haben 60 Sekunden Zeit, um so viele Bälle wie möglich in die Tore zu schiessen. </li>
+                <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
+                <li>Ziel ist es die Bälle gleichmässig in die drei Tore zu verteilen.</li>
+                <li>Jedes Tor gibt 3 Punkte, aber Ungleichverteilung kostet Punkte!</li>
+                <li>Auf dem Feld liegengebliebene Bälle geben keinen Abzug.</li>
+                <li>Euer Roboter muss hinter die Linie fahren zum "Aufladen" (von Hand) und kann den Ball erst wieder vor der Linie "Abladen" (aufs Tor schiessen).</li>
+                <li>Zum Aufladen müssen die beiden Räder vollständig hinter der schwarzen Linie sein.</li>
+                <li>Euer Roboter darf immer nur ein Ball pro mal "abladen". Danach muss euer Roboter wieder hinter die Linie fahren.</li> 
+            </ul>
+            <h4>Punkte</h4>
+            <ul>
+                <li>Punkte = 3 · Tore – (TorMitte – TorLinks) – (TorMitte – TorRechts) – (TorLinks – TorRechts)</li>
+                <li>Beispiel 1: 0 Bälle links, 10 Mitte, 0 rechts → 3 · 10 - 10 - 10 - 0 = 10 Punkte</li>
+                <li>Bespiel 2: 3 Bälle in jedem Tor → 3 · 9 - 0 - 0 - 0 = 27 Punkte</li>
+                <li>Beispiel 3: 5 Bälle links, 5 Mitte, 0 rechts → 3 · 10 - 0 - 5 - 5 = 20 Punkte</li>
+                <li>Verteile die Bälle möglichst ausgeglichen, um Punkteverluste zu vermeiden!</li>
+            </ul>
+            <h2>Zeitplan</h2>
+             <table>
+                <thead>
+                    <tr>
+                        <th>Zeit</th>
+                        <th>Spielfeld</th>
+                        <th>2a</th>
+                        <th>2b</th>
+                        <th>2c</th>
+                        <th>2d</th>
+                        <th>2e</th>
+                        <th>2f</th>
+                        <th>2g</th>
+                        <th>2h</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="10">Wertungslauf 1</td></tr>
+                    <tr>
+                        <td>13:30 - 13:45</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>86</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>13:30 - 13:45</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>87</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>13:45 - 14:00</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>90</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>13:45 - 14:00</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>91</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:00 - 14:15</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>93</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:00 - 14:15</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>-</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr><td colspan="10">Wertungslauf 2</td></tr>
+                    <tr>
+                        <td>14:20 - 14:35</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>86</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:20 - 14:35</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>87</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:35 - 14:50</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>90</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:35 - 14:50</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>91</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:50 - 15:05</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>93</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>14:50 - 15:05</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>-</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr><td colspan="10">Wertungslauf 3</td></tr>
+                    <tr>
+                        <td>15:15 - 15:30</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>86</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>15:15 - 15:30</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>87</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>15:30 - 15:45</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>90</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>15:30 - 15:45</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>91</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>15:45 - 16:00</td>
+                        <td>1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>93</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>15:45 - 16:00</td>
+                        <td>2</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>-</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>Rangliste</h2>
+            <p>Resultate RoboBall</p>
+            <!-- <table id="rankingTableRoboball">
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Klasse</th>
+                        <th>Gruppennummer</th>
+                        <th>Beste Wertung</th>
+                        <th>2. Wertung</th>
+                        <th>3. Wertung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table> -->
         </div>
 
         <div id="move-it-over" class="tab-content">
+            <h2>Regeln</h2>
+            <ul>
+                <li>Jedes Team nimmt an 6 Matches teil.</li>
+                <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
+                <li>Eure Roboter haben pro Match 60 Sekunden Zeit, um möglichst viele Bälle ins gegnerische Feld zu befördern.</li>
+                <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
+                <li>Euer Roboter kann zu Beginn an einem beliebigen Ort auf dem Spielfeld platziert werden.</li>
+                <li>Beim Spielstart hat es auf beiden Spielfeldern je 10 Bälle.</li>
+                <li>Wird ein Ball von der Spielplatte befördert, so wird dieser Ball beim Spielende wieder ins Spielfeld vom Roboter, der ihn zuletzt berührt hat gelegt.</li>
+            </ul>
+            <h4>Punkte</h4>
+            <ul>
+                <li>Pro Spiel können maximal 10 Punkte erreicht werden abhängig von der Ball Differenz.</li> 
+                <li>0 Ball Differenz (Unentschieden) → je 5 Punkte</li>
+                <li>2 und 4 Ball Differenz → Sieger 6 Punkte & Verlierer 4 Punkte</li>
+                <li>6 und 8 Ball Differenz → Sieger 7 Punkte & Verlierer 3 Punkte</li>
+                <li>10 und 12 Ball Differenz → Sieger 8 Punkte & Verlierer 2 Punkte</li>
+                <li>14 und 16 Ball Differenz → Sieger 9 Punkte & Verlierer 1 Punkt</li>
+                <li>18 und 20 Ball Differenz → Sieger 10 Punkte</li>
+            </ul>
+            <h2>Zeitplan</h2>
+            <h2>Rangliste</h2>
             <p>Resultate Move-it-over</p>
         </div>
 

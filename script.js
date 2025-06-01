@@ -2,7 +2,8 @@
 // Globale Variable zum Speichern der Excel Daten in JSON
 // ====================
 window.linienfolgerDaten = {};
-window.teams = []
+window.roboballDaten = {};
+window.teams = [];
 
 // ====================
 // Excel-Datei laden und Daten aus mehreren Worksheets extrahieren
@@ -24,9 +25,9 @@ fetch('KWI-RoboChallange_Rangliste_FS2025.xlsx')
             alleDaten[sheetName] = jsonData;
         });
 
-        createLinienfolgerRangliste(alleDaten['Linienfolger'] || []);
-        renderTable(window.linienfolgerDaten);
-
+        createLinienfolgerRangliste(alleDaten['Linienfolger-Rangliste'] || []);
+        createTableLinienfolger();
+        createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
         createTeamsList(alleDaten['Teams'] || [])
 })
 .catch(error => {
@@ -51,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = tab.getAttribute('data-tab');
         document.getElementById(id).classList.add('active');
 
-        if (id === 'linienfolger') renderTable(window.linienfolgerDaten);
+        if (id === 'linienfolger') createTableLinienfolger();
+        // if (id === 'roboball') createTableRoboball();
         if (id === 'total') createRanglisteTotal();
       });
     });
@@ -63,8 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function createLinienfolgerRangliste(data) {  
     const gueltigeZeiten = data.filter(t => t.Zeit !== 'x' && !isNaN(parseFloat(t.Zeit)));
     const ungueltigeZeiten = data.filter(t => t.Zeit === 'x');
-  
-    gueltigeZeiten.sort((a, b) => parseFloat(a.Zeit) - parseFloat(b.Zeit));
   
     // Ränge zuweisen
     const rangliste = gueltigeZeiten.map((entry, i) => ({
@@ -89,15 +89,68 @@ function createLinienfolgerRangliste(data) {
 }
 
 // ====================
-// Tabelle erstellen
+// Tabelle Linienfolger
 // ====================
-function renderTable(data) {
+function createTableLinienfolger() {
     const tbody = document.querySelector('#rankingTableLinienfolger tbody');
     tbody.innerHTML = '';
   
-    data.forEach(row => {
+    window.linienfolgerDaten.forEach(row => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td><td>${row.Klasse}</td>`;
+      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td>`;
+      tbody.appendChild(tr);
+    });
+}
+
+// ====================
+// Rangliste RoboBall
+// ====================
+function createRoboballRangliste(data) {  
+  
+    // Ränge zuweisen
+    const rangliste = data.map((entry, i) => ({
+        Rang: i + 1,
+        Gruppennummer: entry.Gruppennummer,
+        Punkte1: entry.Bester,
+        Punkte2: entry.Zweiter,
+        Punkte3: entry.Dritter,
+        Klasse: entry.Klasse,
+    }));
+
+    rangliste.forEach((row, index) => {
+        if (index === 0) return;
+        if (row.Punkte1 === rangliste[index - 1].Punkte1) {
+            if (row.Punkte2 > rangliste[index - 1].Punkte2) {
+                row.Rang = rangliste[index - 1].Rang;
+                rangliste[index - 1].Rang = index + 1;
+                return;
+            } else if (row.Punkte2 === rangliste[index - 1].Punkte2) {
+                if (row.Punkte3 > rangliste[index - 1].Punkte3) {
+                    row.Rang = rangliste[index - 1].Rang;
+                    rangliste[index - 1].Rang = index + 1;
+                    return;
+                } else if (row.Punkte3 === rangliste[index - 1].Punkte3) {
+                    row.Rang = rangliste[index - 1].Rang;
+                    return;
+                }
+            }
+        }
+    });
+  
+    rangliste.sort((a, b) => a.Rang - b.Rang);
+    window.roboballDaten = rangliste;
+}
+
+// ====================
+// Tabelle RoboBall
+// ====================
+function createTableRoboball() {
+    const tbody = document.querySelector('#rankingTableRoboball tbody');
+    tbody.innerHTML = '';
+  
+    window.roboballDaten.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte1}</td><td>${row.Punkte2}</td><td>${row.Punkte3}</td>`;
       tbody.appendChild(tr);
     });
 }
