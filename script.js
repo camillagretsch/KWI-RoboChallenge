@@ -3,6 +3,7 @@
 // ====================
 window.linienfolgerDaten = {};
 window.roboballDaten = {};
+window.moveItOverDaten = {};
 window.teams = [];
 
 // ====================
@@ -27,10 +28,11 @@ fetch('KWI-RoboChallange_Rangliste_FS2025.xlsx')
 
         createLinienfolgerRangliste(alleDaten['Linienfolger-Rangliste'] || []);
         createTableLinienfolger();
-        createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
-        createTeamsList(alleDaten['Teams'] || [])
-})
-.catch(error => {
+        // createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
+        // createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
+        createTeamsList(alleDaten['Teams'] || []);
+
+    }).catch(error => {
     console.error('Fehler beim Laden der Excel-Datei:', error);
 });
 
@@ -53,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).classList.add('active');
 
         if (id === 'linienfolger') createTableLinienfolger();
-        // if (id === 'roboball') createTableRoboball();
+        if (id === 'roboball') createTableRoboball();
+        if (id === 'move-it-over') createTableMoveItOver();
         if (id === 'total') createRanglisteTotal();
       });
     });
@@ -117,23 +120,10 @@ function createRoboballRangliste(data) {
         Klasse: entry.Klasse,
     }));
 
+    // Falls zwei Teams bei allen Wertungslüfen genau gleich viel Punkte haben, haben sie den selben Rang
     rangliste.forEach((row, index) => {
-        if (index === 0) return;
-        if (row.Punkte1 === rangliste[index - 1].Punkte1) {
-            if (row.Punkte2 > rangliste[index - 1].Punkte2) {
-                row.Rang = rangliste[index - 1].Rang;
-                rangliste[index - 1].Rang = index + 1;
-                return;
-            } else if (row.Punkte2 === rangliste[index - 1].Punkte2) {
-                if (row.Punkte3 > rangliste[index - 1].Punkte3) {
-                    row.Rang = rangliste[index - 1].Rang;
-                    rangliste[index - 1].Rang = index + 1;
-                    return;
-                } else if (row.Punkte3 === rangliste[index - 1].Punkte3) {
-                    row.Rang = rangliste[index - 1].Rang;
-                    return;
-                }
-            }
+        if (index > 0 && row.Punkte1 === rangliste[index - 1].Punkte1 && row.Punkte2 === rangliste[index - 1].Punkte2 && row.Punkte3 === rangliste[index - 1].Punkte3) {
+            row.Rang = rangliste[index - 1].Rang;
         }
     });
   
@@ -156,6 +146,45 @@ function createTableRoboball() {
 }
 
 // ====================
+// Rangliste Move it over
+// ====================
+function createMoveItOverRangliste(data) {  
+  
+    // Ränge zuweisen
+    const rangliste = data.map((entry, i) => ({
+        Rang: i + 1,
+        Gruppennummer: entry.Gruppennummer,
+        Punkte: entry.Punkte,
+        Siege: entry.Siege,
+        Klasse: entry.Klasse,
+    }));
+
+    // Falls zwei Teams genau gleich viel Punkte und Siege haben, haben sie den selben Rang
+    rangliste.forEach((row, index) => {
+        if (index > 0 && row.Punkte === rangliste[index - 1].Punkte && row.Siege === rangliste[index - 1].Siege) {
+            row.Rang = rangliste[index - 1].Rang;
+        }
+    });
+  
+    rangliste.sort((a, b) => a.Rang - b.Rang);
+    window.moveItOverDaten = rangliste;
+}
+
+// ====================
+// Tabelle Move it over
+// ====================
+function createTableMoveItOver() {
+    const tbody = document.querySelector('#rankingTableMoveItOver tbody');
+    tbody.innerHTML = '';
+  
+    window.moveItOverDaten.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td><td>${row.Siege}</td>`;
+      tbody.appendChild(tr);
+    });
+}
+
+// ====================
 // Liste aller Teams erstellen
 // ====================
 function createTeamsList(data) {
@@ -171,6 +200,7 @@ function createRanglisteTotal() {
 
     const rangliste = [];
 
+    // Linienfolger
     window.teams.forEach(row => {
         const rang = 1;
         let punkte = 0;
@@ -178,12 +208,34 @@ function createRanglisteTotal() {
         const klasse = row.klasse;
         team.forEach((member) =>  {
             punkte += window.linienfolgerDaten.filter(t => t.Gruppennummer === member)[0].Rang;
-            // Ergänzen mit move-it-over und roboball
         });
         punkte = punkte/team.length;
-        punkte = punkte.toFixed(1);
+        punkte = punkte.toFixed(1); // TODO: entfernen
         rangliste.push({team, punkte, rang, klasse});
     });
+
+    // Roboball & MIO
+    // rangliste.forEach(row => {
+    //     let punkte = row.punkte;
+
+    //     row.team.forEach((member) => {
+    //         // Roboball
+    //         let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
+    //         if (data.length > 0) {
+    //             punkte += data[0].Rang
+    //         }
+
+    //         // MIO
+    //         data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
+    //         if (data.length > 0) {
+    //             punkte += data[0].Rang
+    //         }
+
+    //         row.punkte = punkte.toFixed(1);
+    //     })
+    // });
+
+    console.log(rangliste)
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
 
