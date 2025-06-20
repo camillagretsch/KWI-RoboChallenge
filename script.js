@@ -28,8 +28,8 @@ fetch('KWI-RoboChallange_Rangliste_FS2025.xlsx')
 
         createLinienfolgerRangliste(alleDaten['Linienfolger-Rangliste'] || []);
         createTableLinienfolger();
-        // createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
-        // createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
+        createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
+        createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
         createTeamsList(alleDaten['Teams'] || []);
 
     }).catch(error => {
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (id === 'linienfolger') createTableLinienfolger();
         if (id === 'roboball') createTableRoboball();
         if (id === 'move-it-over') createTableMoveItOver();
-        if (id === 'total') createRanglisteTotal();
+        //if (id === 'total') createRanglisteTotal();
       });
     });
   });
@@ -210,7 +210,6 @@ function createRanglisteTotal() {
             punkte += window.linienfolgerDaten.filter(t => t.Gruppennummer === member)[0].Rang;
         });
         punkte = punkte/team.length;
-        punkte = punkte.toFixed(1); // TODO: entfernen
         rangliste.push({team, punkte, rang, klasse});
     });
 
@@ -234,8 +233,6 @@ function createRanglisteTotal() {
     //         row.punkte = punkte.toFixed(1);
     //     })
     // });
-
-    console.log(rangliste)
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
 
