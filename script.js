@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (id === 'linienfolger') createTableLinienfolger();
         if (id === 'roboball') createTableRoboball();
         if (id === 'move-it-over') createTableMoveItOver();
-        //if (id === 'total') createRanglisteTotal();
+        if (id === 'total') createRanglisteTotal();
       });
     });
   });
@@ -214,25 +214,25 @@ function createRanglisteTotal() {
     });
 
     // Roboball & MIO
-    // rangliste.forEach(row => {
-    //     let punkte = row.punkte;
+    rangliste.forEach(row => {
+        let punkte = row.punkte;
 
-    //     row.team.forEach((member) => {
-    //         // Roboball
-    //         let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
-    //         if (data.length > 0) {
-    //             punkte += data[0].Rang
-    //         }
+        row.team.forEach((member) => {
+            // Roboball
+            let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
+            if (data.length > 0) {
+                punkte += data[0].Rang
+            }
 
-    //         // MIO
-    //         data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
-    //         if (data.length > 0) {
-    //             punkte += data[0].Rang
-    //         }
+            // MIO
+            data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
+            if (data.length > 0) {
+                punkte += data[0].Rang
+            }
 
-    //         row.punkte = punkte.toFixed(1);
-    //     })
-    // });
+            row.punkte = punkte.toFixed(1);
+        })
+    });
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
 
