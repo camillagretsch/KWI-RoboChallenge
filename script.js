@@ -247,4 +247,23 @@ function createRanglisteTotal() {
         tr.innerHTML = `<td>${row.rang}</td><td>${row.team}</td><td>${row.punkte}</td><td>${row.klasse}</td>`;
         tbody.appendChild(tr);
     });
+
+    const punkteProKlasse = {};
+    const anzahlTeamsProKlasse = {};
+
+    rangliste.forEach((row) => {
+        // Punkte und Anzahl Teams pro Klasse erfassen
+        if (!punkteProKlasse[row.klasse]) {
+            punkteProKlasse[row.klasse] = 0;
+            anzahlTeamsProKlasse[row.klasse] = 0;
+        }
+        punkteProKlasse[row.klasse] += row.rang;
+        anzahlTeamsProKlasse[row.klasse]++;
+    });
+    const durchschnittProKlasse = {};
+    for (const klasse in punkteProKlasse) {
+        durchschnittProKlasse[klasse] = punkteProKlasse[klasse] / anzahlTeamsProKlasse[klasse];
+    }
+
+    console.log('Durchschnittliche Punkte pro Klasse:', durchschnittProKlasse);
 }
