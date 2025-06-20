@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (id === 'linienfolger') createTableLinienfolger();
         if (id === 'roboball') createTableRoboball();
         if (id === 'move-it-over') createTableMoveItOver();
-        //if (id === 'total') createRanglisteTotal();
+        if (id === 'total') createRanglisteTotal();
       });
     });
   });
