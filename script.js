@@ -9,7 +9,7 @@ window.teams = [];
 // ====================
 // Excel-Datei laden und Daten aus mehreren Worksheets extrahieren
 // ====================
-fetch('KWI-RoboChallange_Rangliste_FS2025.xlsx')
+fetch('KWI-RoboChallenge_Rangliste.xlsx')
 .then(response => response.arrayBuffer())
 .then(arrayBuffer => {
         const data = new Uint8Array(arrayBuffer);
@@ -26,10 +26,10 @@ fetch('KWI-RoboChallange_Rangliste_FS2025.xlsx')
             alleDaten[sheetName] = jsonData;
         });
 
-        createLinienfolgerRangliste(alleDaten['Linienfolger-Rangliste'] || []);
+        createLinienfolgerRangliste(alleDaten['Linienfolger-Resultate'] || []);
         createTableLinienfolger();
-        createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
-        createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
+        // createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
+        // createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
         createTeamsList(alleDaten['Teams'] || []);
 
     }).catch(error => {
@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).classList.add('active');
 
         if (id === 'linienfolger') createTableLinienfolger();
-        if (id === 'roboball') createTableRoboball();
-        if (id === 'move-it-over') createTableMoveItOver();
+        // if (id === 'roboball') createTableRoboball();
+        // if (id === 'move-it-over') createTableMoveItOver();
         if (id === 'total') createRanglisteTotal();
       });
     });
@@ -66,17 +66,41 @@ document.addEventListener('DOMContentLoaded', () => {
 // Rangliste Linienfolger
 // ====================
 function createLinienfolgerRangliste(data) {  
-    const gueltigeZeiten = data.filter(t => t.Zeit !== 'x' && !isNaN(parseFloat(t.Zeit)));
+    // gültige Zeiten filtern + numerisch sortieren
+    const gueltigeZeiten = data
+        .filter(t => t.Zeit !== 'x' && !isNaN(Number(t.Zeit)))
+        .sort((a, b) => Number(a.Zeit) - Number(b.Zeit));
     const ungueltigeZeiten = data.filter(t => t.Zeit === 'x');
   
+    // Mit Sensor
+    const datenMitSensor = gueltigeZeiten.filter(
+        entry => entry.Sensor === 'x'
+    );
+
+    // Ohne Sensor
+    const datenOhneSensor = gueltigeZeiten.filter(
+        entry => entry.Sensor !== 'x'
+    );
+
     // Ränge zuweisen
-    const rangliste = gueltigeZeiten.map((entry, i) => ({
+    const rangliste = datenMitSensor.map((entry, i) => ({
         Rang: i + 1,
         Gruppennummer: entry.Gruppennummer,
         Punkte: entry.Zeit,
         Klasse: entry.Klasse,
+        Sensor: true
     }));
   
+    datenOhneSensor.forEach((entry, i) => {
+        rangliste.push({
+            Rang: i + 1,
+            Gruppennummer: entry.Gruppennummer,
+            Punkte: entry.Zeit,
+            Klasse: entry.Klasse,
+            Sensor: false
+        });
+    });
+    
     const letzterRang = gueltigeZeiten.length + 1;
   
     ungueltigeZeiten.forEach(entry => {
@@ -85,6 +109,7 @@ function createLinienfolgerRangliste(data) {
             Gruppennummer: entry.Gruppennummer,
             Punkte: '-',
             Klasse: entry.Klasse,
+            Sensor: true
         });
     });
 
@@ -95,13 +120,27 @@ function createLinienfolgerRangliste(data) {
 // Tabelle Linienfolger
 // ====================
 function createTableLinienfolger() {
-    const tbody = document.querySelector('#rankingTableLinienfolger tbody');
+    const container = document.getElementById('ranglistenContainer');
+    if (window.innerWidth < 768) {
+        container.style.flexDirection = 'column';
+    } else {
+        container.style.flexDirection = 'row';
+    }
+    const tbodySensor = document.querySelector('#rankingTableLinienfolgerMitSensor tbody');
+    const tbody = document.querySelector('#rankingTableLinienfolgerOhneSensor tbody');
+
+    tbodySensor.innerHTML = '';
     tbody.innerHTML = '';
   
     window.linienfolgerDaten.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td>`;
-      tbody.appendChild(tr);
+        const tr = document.createElement('tr');
+        if (row.Sensor) {
+            tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td>`;
+            tbodySensor.appendChild(tr);
+        } else {
+            tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td>`;
+            tbody.appendChild(tr);
+        }
     });
 }
 
@@ -188,7 +227,19 @@ function createTableMoveItOver() {
 // Liste aller Teams erstellen
 // ====================
 function createTeamsList(data) {
-    data.forEach(row => window.teams.push({team: row.Team.split("|").map(s => parseFloat(s.trim())), klasse: row.Klasse}));
+    data.forEach(row => {
+        window.teams.push({
+            team: row.Team
+                .split("|")
+                .map(s => parseFloat(s.trim())),
+
+            namen: row.Namen
+                .split("|")
+                .map(s => s.trim()),
+
+            klasse: row.Klasse
+        });
+    });
 }
 
 // ====================
@@ -205,34 +256,34 @@ function createRanglisteTotal() {
         const rang = 1;
         let punkte = 0;
         const team = row.team;
+        const namen = row.namen
         const klasse = row.klasse;
         team.forEach((member) =>  {
             punkte += window.linienfolgerDaten.filter(t => t.Gruppennummer === member)[0].Rang;
         });
-        punkte = punkte/team.length;
-        rangliste.push({team, punkte, rang, klasse});
+        rangliste.push({team, punkte, rang, klasse, namen});
     });
 
     // Roboball & MIO
-    rangliste.forEach(row => {
-        let punkte = row.punkte;
+    // rangliste.forEach(row => {
+    //     let punkte = row.punkte;
 
-        row.team.forEach((member) => {
-            // Roboball
-            let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
-            if (data.length > 0) {
-                punkte += data[0].Rang
-            }
+    //     row.team.forEach((member) => {
+    //         // Roboball
+    //         let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
+    //         if (data.length > 0) {
+    //             punkte += data[0].Rang
+    //         }
 
-            // MIO
-            data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
-            if (data.length > 0) {
-                punkte += data[0].Rang
-            }
+    //         // MIO
+    //         data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
+    //         if (data.length > 0) {
+    //             punkte += data[0].Rang
+    //         }
 
-            row.punkte = punkte.toFixed(1);
-        })
-    });
+    //         row.punkte = punkte.toFixed(1);
+    //     })
+    // });
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
 
@@ -244,7 +295,7 @@ function createRanglisteTotal() {
         }
 
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row.rang}</td><td>${row.team}</td><td>${row.punkte}</td><td>${row.klasse}</td>`;
+        tr.innerHTML = `<td>${row.rang}</td><td>${row.team}</td><td>${row.klasse}</td><td>${row.namen}</td><td>${row.punkte}</td>`;
         tbody.appendChild(tr);
     });
 

@@ -1,1490 +1,254 @@
 <!DOCTYPE html>
 <html lang="de" style="padding-inline: 1rem;">
-    <head>
-        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-        <meta charset="UTF-8">
-        <!-- SheetJS Bibliothek -->
-        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-        <!-- Deine externe JS-Datei -->
-        <script src="script.js"></script>
-        <title>KWI-RoboChallenge</title>
-        <style>
-            body {
-                font-family: 'Roboto';
-            }
-            
-            .top-left-image {
-                position: fixed;
-                top: 1rem;
-                right: 1rem;
-                width: 8rem;
-            }
 
-            /* Tabbar */
-            .tabs {
-                display: flex;
-                padding-right: 10rem;
-                justify-content: space-between;
-                font-size: 6rem;
-            }
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <!-- SheetJS Bibliothek -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <!-- Deine externe JS-Datei -->
+    <script src="script.js"></script>
+    <title>KWI-RoboChallenge</title>
+    <style>
+        body {
+            font-family: 'Roboto';
+        }
 
-            .tab {
-                padding: 10px 20px;
-                cursor: pointer;
-                border: none;
-                background: none;
-                font-weight: bold;
-                border-bottom: 3px solid transparent;
-            }
+        .top-left-image {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 8rem;
+        }
 
-            .tab.active {
-                border-bottom: 3px solid #007BFF;
-                color: #007BFF;
-            }
+        /* Tabbar */
+        .tabs {
+            display: flex;
+            padding-right: 10rem;
+            justify-content: space-between;
+            background: #59BFE8;
+        }
 
-            /* Tab Inhalte */
-            .tab-content {
-                display: none;
-            }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            font-size: 14px;
+            font-family: 'Roboto';
+        }
 
-            .tab-content.active {
-                display: block;
-            }
+        .tab.active {
+            border-bottom: 3px solid #1685BB;
+            color: #1685BB;
+        }
 
-            /* Tabelle */
-            table {
-                width: 50%;
-                border-collapse: collapse;
-                margin: 20px 0;
-            }
+        /* Tab Inhalte */
+        .tab-content {
+            display: none;
+        }
 
-            th, td {
-                border: 1px solid #aaa;
-                padding: 8px;
-                text-align: center;
-            }
+        .tab-content.active {
+            display: block;
+        }
 
-            th {
-                background-color: #f2f2f2;
-            }
+        /* Tabelle */
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
 
-            #MIOSpielplan .header {
-                font-weight: bold; 
-                background-color: #a5cefb;
-            }
+        th,
+        td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: center;
+        }
 
-            .round-separator td {
-                border-top: 5px solid #a5cefb;
-            }
+        th {
+            background-color: #f2f2f2;
+        }
 
-            .round-separator th {
-                border-top: 5px solid #a5cefb;
-            }
+        #MIOSpielplan .header {
+            font-weight: bold;
+            background-color: #a5cefb;
+        }
 
-            #MIOSpielplan .round-separator td:nth-child(6) {
-                border-right: 5px solid #a5cefb;
-            }
+        .round-separator td {
+            border-top: 5px solid #a5cefb;
+        }
 
-            #MIOSpielplan tr:not(.round-separator) td:nth-child(5) {
-                border-right: 5px solid #a5cefb;
-            }
-        </style>
-    </head>
-    <body>
-        <div>
-            <h1>KWI-RoboChallenge 2025</h1>
-            <img class="top-left-image" src="./logo.svg" alt="Logo">
+        .round-separator th {
+            border-top: 5px solid #a5cefb;
+        }
+
+        #MIOSpielplan .round-separator td:nth-child(6) {
+            border-right: 5px solid #a5cefb;
+        }
+
+        #MIOSpielplan tr:not(.round-separator) td:nth-child(5) {
+            border-right: 5px solid #a5cefb;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>KWI-RoboChallenge 2026</h1>
+        <img class="top-left-image" src="./logo.svg" alt="Logo">
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="linienfolger">Linienfolger</button>
+        <button class="tab" data-tab="roboball">RoboBall</button>
+        <button class="tab" data-tab="move-it-over">Move-it-over</button>
+        <button class="tab" data-tab="total">Gesamtwertung</button>
+    </div>
+
+    <!-- Inhalte -->
+    <div id="linienfolger" class="tab-content active">
+        <div style="display: flex; flex-direction: row; gap: 20px;" id="ranglistenContainer">
+
+            <div style="flex: 1;">
+                <h2>Rangliste Linienfolger mit Sensor</h2>
+
+                <table id="rankingTableLinienfolgerMitSensor" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Klasse</th>
+                            <th>Gruppennummer</th>
+                            <th>Zeit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="flex: 1;">
+                <h2>Rangliste Linienfolger ohne Sensor</h2>
+
+                <table id="rankingTableLinienfolgerOhneSensor" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Klasse</th>
+                            <th>Gruppennummer</th>
+                            <th>Zeit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
+    </div>
 
-        <div class="tabs">
-            <button class="tab active" data-tab="linienfolger">Linienfolger</button>
-            <button class="tab" data-tab="roboball">RoboBall</button>
-            <button class="tab" data-tab="move-it-over">Move-it-over</button>
-            <button class="tab" data-tab="total">Gesamtwertung</button>
-        </div>
+    <div id="roboball" class="tab-content">
+        <h2>Regeln</h2>
+        <ul>
+            <li>Jedes Team nimmt an 6 Spielen teil.</li>
+            <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
+            <li>Ziel ist es, möglichst viele Punkte durch Tore zu erzielen.</li>
+            <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
+            <li>Auf dem Feld liegengebliebene Bälle geben keinen Abzug.</li>
+            <li>Für einen Sieg gibt es 3 Punkte für die Rangliste und für ein Unentschieden je 1 Punkt.</li>
+            <li>Bei Punktegleichheit entscheidet die höhere Torpunktzahl.</li>
+            <li>Zum «Aufladen» muss der Ball innerhalb der Ladezone von Hand senkrecht von oben abgegeben werden.</li>
+            <li>Zum Aufladen müssen die beiden Räder vollständig hinter der schwarzen Linie sein.</li>
+            <li>Der Roboter muss sich komplett vor der Ladezone befinden, um einen Ball «abzuladen» (aufs Tor schiessen).</li>
+            <li>Euer Roboter darf immer nur einen Ball pro Mal «abladen». Danach muss euer Roboter wieder in die Ladezone fahren.</li>
+            <li>Berühren sich zwei Roboter, so gewinnt dasjenige Team, in dessen Hälfte die Berührung stattgefunden hat, automatisch das Spiel. Die Anzahl Torpunkte für diesen Fall wird noch bekanntgegeben.</li>
+            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels keine Teile verlieren.</li>
+        </ul>
+        <h4>Punkteverteilung</h4>   
+        <ul>
+            <li>Tor in der eigenen Hälfte – 1 Torpunkt</li>
+            <li>Tor in der Mitte – 3 Torpunkte</li>
+            <li>Tor in der gegnerischen Hälfte – 5 Torpunkte</li>
+        </ul>
+        <!-- <h>Spielplan</h> -->
+        <!-- <h2>Rangliste</h2> -->
+        <!-- <table id="rankingTableRoboball">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Klasse</th>
+                    <th>Gruppennummer</th>
+                    <th>Beste Wertung</th>
+                    <th>2. Wertung</th>
+                    <th>3. Wertung</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> -->
+    </div>
 
-          <!-- Inhalte -->
-        <div id="linienfolger" class="tab-content active">
-            <h2>Rangliste Linienfolger</h2>
+    <div id="move-it-over" class="tab-content">
+        <h2>Regeln</h2>
+        <ul>
+            <li>Jedes Team nimmt an 6 Spielen teil.</li>
+            <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
+            <li>Ziel ist es, möglichst viele Bälle ins gegnerische Feld zu befördern.</li>
+            <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
+            <li>Pro Spiel können maximal 10 Punkte erreicht werden, abhängig von der Balldifferenz.</li>
+            <li>Bei Punktegleichheit entscheiden die Anzahl Siege.</li>
+            <li>Euer Roboter kann zu Beginn an einem beliebigen Ort auf dem Spielfeld platziert werden.</li>
+            <li>Beim Spielstart hat es auf beiden Spielfeldern je 10 Bälle.</li>
+            <li>Wird ein Ball von der Spielplatte befördert, so wird dieser Ball beim Spielende wieder ins Spielfeld vom
+                Roboter, der ihn zuletzt berührt hat gelegt.</li>
+            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels keine Teile verlieren.</li>
+        </ul>
+        <h4>Punkteverteilung</h4>
+        <ul>
+            <li>0 Ball Differenz (Unentschieden) → je 5 Punkte</li>
+            <li>2 und 4 Ball Differenz → Sieger 6 Punkte & Verlierer 4 Punkte</li>
+            <li>6 und 8 Ball Differenz → Sieger 7 Punkte & Verlierer 3 Punkte</li>
+            <li>10 und 12 Ball Differenz → Sieger 8 Punkte & Verlierer 2 Punkte</li>
+            <li>14 und 16 Ball Differenz → Sieger 9 Punkte & Verlierer 1 Punkt</li>
+            <li>18 und 20 Ball Differenz → Sieger 10 Punkte & Verlierer 0 Punkte</li>
+        </ul>
+        <!-- <h2>Spieplan</h2> -->
+        <!-- <iframe style="width: 100%; height: 100%;" src="./KWI-RoboChallenge_Rangliste.html"></iframe> -->
+        <!-- <h2>Rangliste</h2> -->
+        <!-- <table id="rankingTableMoveItOver">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Klasse</th>
+                    <th>Gruppennummer</th>
+                    <th>Punkte</th>
+                    <th>Anzahl Siege</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> -->
+    </div>
 
-            <table id="rankingTableLinienfolger">
-                <thead>
-                    <tr>
-                        <th>Rang</th>
-                        <th>Klasse</th>
-                        <th>Gruppennummer</th>
-                        <th>Zeit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <div id="total" class="tab-content">
+        <h2>Rangliste Gesamtwertung</h2>
 
-        <div id="roboball" class="tab-content">
-            <h2>Regeln</h2>
-            <ul>
-                <li>Gespielt wird in 2/3er Teams.</li>
-                <li>Eure Roboter haben 60 Sekunden Zeit, um so viele Bälle wie möglich in die Tore zu schiessen. </li>
-                <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
-                <li>Ziel ist es die Bälle gleichmässig in die drei Tore zu verteilen.</li>
-                <li>Jedes Tor gibt 3 Punkte, aber Ungleichverteilung kostet Punkte!</li>
-                <li>Auf dem Feld liegengebliebene Bälle geben keinen Abzug.</li>
-                <li>Euer Roboter muss hinter die Linie fahren zum "Aufladen" (von Hand) und kann den Ball erst wieder vor der Linie "Abladen" (aufs Tor schiessen).</li>
-                <li>Zum Aufladen müssen die beiden Räder vollständig hinter der schwarzen Linie sein.</li>
-                <li>Euer Roboter darf immer nur ein Ball pro mal "abladen". Danach muss euer Roboter wieder hinter die Linie fahren.</li> 
-            </ul>
-            <h4>Punkte</h4>
-            <ul>
-                <li>Punkte = 3 · Tore – (TorMitte – TorLinks) – (TorMitte – TorRechts) – (TorLinks – TorRechts)</li>
-                <li>Beispiel 1: 0 Bälle links, 10 Mitte, 0 rechts → 3 · 10 - 10 - 10 - 0 = 10 Punkte</li>
-                <li>Bespiel 2: 3 Bälle in jedem Tor → 3 · 9 - 0 - 0 - 0 = 27 Punkte</li>
-                <li>Beispiel 3: 5 Bälle links, 5 Mitte, 0 rechts → 3 · 10 - 0 - 5 - 5 = 20 Punkte</li>
-                <li>Verteile die Bälle möglichst ausgeglichen, um Punkteverluste zu vermeiden!</li>
-            </ul>
-            <h2>Spieplan</h2>
-             <table id="RoboballSpielplan">
-                <thead>
-                    <tr>
-                        <th>Zeit</th>
-                        <th>Spielfeld</th>
-                        <th>2a</th>
-                        <th>2b</th>
-                        <th>2c</th>
-                        <th>2d</th>
-                        <th>2e</th>
-                        <th>2f</th>
-                        <th>2g</th>
-                        <th>2h</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="10" style="font-weight: bold; background-color: #a5cefb;">Wertungslauf 1</td></tr>
-                    <tr>
-                        <th rowspan="2">13:30 - 13:45</th>
-                        <td>1</td>
-                        <td>50</td>
-                        <td>74</td>
-                        <td>7</td>
-                        <td>27</td>
-                        <td>15</td>
-                        <td>86</td>
-                        <td>64</td>
-                        <td>39</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>53</td>
-                        <td>76</td>
-                        <td>9</td>
-                        <td>29</td>
-                        <td>17</td>
-                        <td>87</td>
-                        <td>66</td>
-                        <td>41</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">13:45 - 14:00</td>
-                        <td>1</td>
-                        <td>54</td>
-                        <td>77</td>
-                        <td>5</td>
-                        <td>30</td>
-                        <td>18</td>
-                        <td>90</td>
-                        <td>68</td>
-                        <td>42</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>56</td>
-                        <td>80</td>
-                        <td>12</td>
-                        <td>32</td>
-                        <td>20</td>
-                        <td>91</td>
-                        <td>70</td>
-                        <td>44</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">14:00 - 14:15</td>
-                        <td>1</td>
-                        <td>62</td>
-                        <td>81</td>
-                        <td>8</td>
-                        <td>35</td>
-                        <td>23</td>
-                        <td>93</td>
-                        <td>71</td>
-                        <td>46</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>58</td>
-                        <td>84</td>
-                        <td>11</td>
-                        <td>36</td>
-                        <td>24</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>48</td>
-                    </tr>
-                    <tr><td colspan="10" style="font-weight: bold; background-color: #a5cefb;">Wertungslauf 2</td></tr>
-                    <tr>
-                        <th rowspan="2">14:20 - 14:35</th>
-                        <td>1</td>
-                        <td>50</td>
-                        <td>76</td>
-                        <td>5</td>
-                        <td>32</td>
-                        <td>23</td>
-                        <td>86</td>
-                        <td>66</td>
-                        <td>42</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>53</td>
-                        <td>77</td>
-                        <td>12</td>
-                        <td>35</td>
-                        <td>24</td>
-                        <td>87</td>
-                        <td>68</td>
-                        <td>44</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">14:35 - 14:50</th>
-                        <td>1</td>
-                        <td>54</td>
-                        <td>80</td>
-                        <td>8</td>
-                        <td>36</td>
-                        <td>15</td>
-                        <td>90</td>
-                        <td>70</td>
-                        <td>46</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>56</td>
-                        <td>81</td>
-                        <td>11</td>
-                        <td>27</td>
-                        <td>17</td>
-                        <td>91</td>
-                        <td>71</td>
-                        <td>48</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">14:50 - 15:05</th>
-                        <td>1</td>
-                        <td>62</td>
-                        <td>84</td>
-                        <td>7</td>
-                        <td>29</td>
-                        <td>18</td>
-                        <td>93</td>
-                        <td>64</td>
-                        <td>39</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>58</td>
-                        <td>74</td>
-                        <td>9</td>
-                        <td>30</td>
-                        <td>20</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>41</td>
-                    </tr>
-                    <tr><td colspan="10" style="font-weight: bold; background-color: #a5cefb;">Wertungslauf 3</td></tr>
-                    <tr>
-                        <th rowspan="2">15:15 - 15:30</th>
-                        <td>1</td>
-                        <td>50</td>
-                        <td>77</td>
-                        <td>8</td>
-                        <td>36</td>
-                        <td>17</td>
-                        <td>86</td>
-                        <td>68</td>
-                        <td>48</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>53</td>
-                        <td>80</td>
-                        <td>11</td>
-                        <td>27</td>
-                        <td>18</td>
-                        <td>87</td>
-                        <td>70</td>
-                        <td>39</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">15:30 - 15:45</th>
-                        <td>1</td>
-                        <td>54</td>
-                        <td>81</td>
-                        <td>7</td>
-                        <td>29</td>
-                        <td>20</td>
-                        <td>90</td>
-                        <td>71</td>
-                        <td>41</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>56</td>
-                        <td>84</td>
-                        <td>9</td>
-                        <td>30</td>
-                        <td>23</td>
-                        <td>91</td>
-                        <td>64</td>
-                        <td>42</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="2">15:45 - 16:00</th>
-                        <td>1</td>
-                        <td>62</td>
-                        <td>74</td>
-                        <td>5</td>
-                        <td>32</td>
-                        <td>24</td>
-                        <td>93</td>
-                        <td>66</td>
-                        <td>44</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>58</td>
-                        <td>76</td>
-                        <td>12</td>
-                        <td>35</td>
-                        <td>15</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>46</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2>Rangliste</h2>
-            <table id="rankingTableRoboball">
-                <thead>
-                    <tr>
-                        <th>Rang</th>
-                        <th>Klasse</th>
-                        <th>Gruppennummer</th>
-                        <th>Beste Wertung</th>
-                        <th>2. Wertung</th>
-                        <th>3. Wertung</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+        <table id="rankingTableTotal">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Team</th>
+                    <th>Namen</th>
+                    <th>Klasse</th>
+                    <th>Punkte</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
 
-        <div id="move-it-over" class="tab-content">
-            <h2>Regeln</h2>
-            <ul>
-                <li>Jedes Team nimmt an 6 Matches teil.</li>
-                <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
-                <li>Eure Roboter haben pro Match 60 Sekunden Zeit, um möglichst viele Bälle ins gegnerische Feld zu befördern.</li>
-                <li>Nach 60 Sekunden muss euer Roboter stoppen.</li>
-                <li>Euer Roboter kann zu Beginn an einem beliebigen Ort auf dem Spielfeld platziert werden.</li>
-                <li>Beim Spielstart hat es auf beiden Spielfeldern je 10 Bälle.</li>
-                <li>Wird ein Ball von der Spielplatte befördert, so wird dieser Ball beim Spielende wieder ins Spielfeld vom Roboter, der ihn zuletzt berührt hat gelegt.</li>
-            </ul>
-            <h4>Punkte</h4>
-            <ul>
-                <li>Pro Spiel können maximal 10 Punkte erreicht werden abhängig von der Ball Differenz.</li> 
-                <li>0 Ball Differenz (Unentschieden) → je 5 Punkte</li>
-                <li>2 und 4 Ball Differenz → Sieger 6 Punkte & Verlierer 4 Punkte</li>
-                <li>6 und 8 Ball Differenz → Sieger 7 Punkte & Verlierer 3 Punkte</li>
-                <li>10 und 12 Ball Differenz → Sieger 8 Punkte & Verlierer 2 Punkte</li>
-                <li>14 und 16 Ball Differenz → Sieger 9 Punkte & Verlierer 1 Punkt</li>
-                <li>18 und 20 Ball Differenz → Sieger 10 Punkte</li>
-            </ul>
-            <h2>Spieplan</h2>
-            <table id="MIOSpielplan">
-                <!-- Runde 1 -->
-                <thead>
-                    <tr><th>Zeit</th></t><th colspan="5">Spielfeld 1</th> <th colspan="5">Spielfeld 2</th></tr>
-                </thead>
-                <tbody>
-                    <tr><th colspan="11" class="header"">Runde 1</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">13:30 - 13:40</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>73</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>75</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>1</td>
-                        <td>vs.</td>
-                        <td>26</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>2</td>
-                        <td>vs.</td>
-                        <td>28</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>14</td>
-                        <td>vs.</td>
-                        <td>85</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>16</td>
-                        <td>vs.</td>
-                        <td>88</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>65</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2g</td>
-                        <td>63</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>78</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>79</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>3</td>
-                        <td>vs.</td>
-                        <td>31</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>4</td>
-                        <td>vs.</td>
-                        <td>33</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">13:40 - 13:50</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>19</td>
-                        <td>vs.</td>
-                        <td>89</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>21</td>
-                        <td>vs.</td>
-                        <td>92</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>67</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2g</td>
-                        <td>69</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>82</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>83</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>6</td>
-                        <td>vs.</td>
-                        <td>34</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>10</td>
-                        <td>vs.</td>
-                        <td>37</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>22</td>
-                        <td>vs.</td>
-                        <td>94</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>25</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>72</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                <!-- Runde 2 -->
-                    <tr><th colspan="11" class="header">Runde 2</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">13:55 - 14:05</th> 			
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>1</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>2</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>73</td>
-                        <td>vs.</td>
-                        <td>26</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>75</td>
-                        <td>vs.</td>
-                        <td>28</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>14</td>
-                        <td>vs.</td>
-                        <td>65</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>16</td>
-                        <td>vs.</td>
-                        <td>63</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>85</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2f</td>
-                        <td>88</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>3</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>4</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>78</td>
-                        <td>vs.</td>
-                        <td>31</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>79</td>
-                        <td>vs.</td>
-                        <td>33</td>
-                        <td>2d</td>
-                    </tr>								
-                    <tr class="round-separator">
-                        <th rowspan="6">14:05 - 14:15</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>19</td>
-                        <td>vs.</td>
-                        <td>67</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>21</td>
-                        <td>vs.</td>
-                        <td>69</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>89</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2f</td>
-                        <td>92</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>6</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>10</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>82</td>
-                        <td>vs.</td>
-                        <td>34</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>83</td>
-                        <td>vs.</td>
-                        <td>25</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>22</td>
-                        <td>vs.</td>
-                        <td>72</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>37</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>94</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <!-- Runde 3 -->
-                    <tr><th colspan="11" class="header">Runde 3</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">14:20 - 14:30</th> 			
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>14</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>16</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>73</td>
-                        <td>vs.</td>
-                        <td>85</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>75</td>
-                        <td>vs.</td>
-                        <td>88</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>1</td>
-                        <td>vs.</td>
-                        <td>65</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>2</td>
-                        <td>vs.</td>
-                        <td>63</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>26</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>28</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>19</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>21</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>78</td>
-                        <td>vs.</td>
-                        <td>89</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>79</td>
-                        <td>vs.</td>
-                        <td>92</td>
-                        <td>2f</td>
-                    </tr>																
-                    <tr class="round-separator">
-                        <th rowspan="6">14:30 - 14:40</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>3</td>
-                        <td>vs.</td>
-                        <td>67</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>4</td>
-                        <td>vs.</td>
-                        <td>69</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>31</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>33</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>22</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>37</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>82</td>
-                        <td>vs.</td>
-                        <td>94</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>83</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>6</td>
-                        <td>vs.</td>
-                        <td>72</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>10</td>
-                        <td>vs.</td>
-                        <td>25</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>34</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <!-- Runde 4 -->
-                    <tr><th colspan="11" style="font-weight: bold; background-color: #a5cefb;">Runde 4</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">14:50 - 15:00</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>78</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>79</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>1</td>
-                        <td>vs.</td>
-                        <td>31</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>2</td>
-                        <td>vs.</td>
-                        <td>33</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>14</td>
-                        <td>vs.</td>
-                        <td>89</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>16</td>
-                        <td>vs.</td>
-                        <td>92</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>65</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2g</td>
-                        <td>63</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>82</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>83</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>3</td>
-                        <td>vs.</td>
-                        <td>34</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>4</td>
-                        <td>vs.</td>
-                        <td>37</td>
-                        <td>2d</td>
-                    </tr>								
-                    <tr class="round-separator">
-                        <th rowspan="6">15:00 - 15:10</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>19</td>
-                        <td>vs.</td>
-                        <td>94</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2g</td>
-                        <td>69</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>67</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>75</td>
-                        <td>2b</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>73</td>
-                        <td>2b</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>10</td>
-                        <td>vs.</td>
-                        <td>28</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>6</td>
-                        <td>vs.</td>
-                        <td>26</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>25</td>
-                        <td>vs.</td>
-                        <td>88</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>22</td>
-                        <td>vs.</td>
-                        <td>85</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>21</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2g</td>
-                        <td>72</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <!-- Runde 5 -->
-                    <tr><th colspan="11" style="font-weight: bold; background-color: #a5cefb;">Runde 5</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">15:15 - 15:25</th> 			
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>3</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>4</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>73</td>
-                        <td>vs.</td>
-                        <td>31</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>75</td>
-                        <td>vs.</td>
-                        <td>33</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>14</td>
-                        <td>vs.</td>
-                        <td>67</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>16</td>
-                        <td>vs.</td>
-                        <td>69</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>85</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2f</td>
-                        <td>88</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>6</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>10</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>78</td>
-                        <td>vs.</td>
-                        <td>34</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>79</td>
-                        <td>vs.</td>
-                        <td>37</td>
-                        <td>2d</td>
-                    </tr>																
-                    <tr class="round-separator">
-                        <th rowspan="6">15:25 - 15:35</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>19</td>
-                        <td>vs.</td>
-                        <td>72</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>21</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>89</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>2</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>1</td>
-                        <td>2c</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>83</td>
-                        <td>vs.</td>
-                        <td>28</td>
-                        <td>2d</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>82</td>
-                        <td>vs.</td>
-                        <td>26</td>
-                        <td>2d</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2e</td>
-                        <td>25</td>
-                        <td>vs.</td>
-                        <td>63</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2e</td>
-                        <td>22</td>
-                        <td>vs.</td>
-                        <td>65</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2f</td>
-                        <td>92</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2f</td>
-                        <td>94</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                    <!-- Runde 6 -->
-                    <tr><th colspan="11" style="font-weight: bold; background-color: #a5cefb;">Runde 6</th></tr>
-                    <tr class="round-separator">
-                        <th rowspan="6">15:40 - 15:50</th> 			
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>51</td>
-                        <td>vs.</td>
-                        <td>19</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>52</td>
-                        <td>vs.</td>
-                        <td>21</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>73</td>
-                        <td>vs.</td>
-                        <td>89</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>75</td>
-                        <td>vs.</td>
-                        <td>92</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>1</td>
-                        <td>vs.</td>
-                        <td>67</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>2</td>
-                        <td>vs.</td>
-                        <td>69</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>26</td>
-                        <td>vs.</td>
-                        <td>43</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>28</td>
-                        <td>vs.</td>
-                        <td>45</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>55</td>
-                        <td>vs.</td>
-                        <td>22</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>60</td>
-                        <td>vs.</td>
-                        <td>25</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>78</td>
-                        <td>vs.</td>
-                        <td>94</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>33</td>
-                        <td>vs.</td>
-                        <td>49</td>
-                        <td>2h</td>
-                    </tr>																									
-                    <tr class="round-separator">
-                        <th rowspan="6">15:50 - 16:00</th>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>3</td>
-                        <td>vs.</td>
-                        <td>72</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2a</td>
-                        <td>59</td>
-                        <td>vs.</td>
-                        <td>16</td>
-                        <td>2e</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>31</td>
-                        <td>vs.</td>
-                        <td>47</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>79</td>
-                        <td>vs.</td>
-                        <td>88</td>
-                        <td>2f</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2a</td>
-                        <td>57</td>
-                        <td>vs.</td>
-                        <td>14</td>
-                        <td>2e</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2c</td>
-                        <td>10</td>
-                        <td>vs.</td>
-                        <td>63</td>
-                        <td>2g</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2b</td>
-                        <td>82</td>
-                        <td>vs.</td>
-                        <td>85</td>
-                        <td>2f</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2d</td>
-                        <td>37</td>
-                        <td>vs.</td>
-                        <td>40</td>
-                        <td>2h</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2c</td>
-                        <td>6</td>
-                        <td>vs.</td>
-                        <td>65</td>
-                        <td>2g</td>
-                        <!-- Spielfeld 2 -->
-                        <td>2b</td>
-                        <td>83</td>
-                        <td>vs.</td>
-                        <td>4</td>
-                        <td>2c</td>
-                    </tr>
-                    <tr>
-                        <!-- Spielfeld 1 -->
-                        <td>2d</td>
-                        <td>34</td>
-                        <td>vs.</td>
-                        <td>38</td>
-                        <td>2h</td>
-                        <!-- Spielfeld 2 -->
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2>Rangliste</h2>
-            <table id="rankingTableMoveItOver">
-                <thead>
-                    <tr>
-                        <th>Rang</th>
-                        <th>Klasse</th>
-                        <th>Gruppennummer</th>
-                        <th>Punkte</th>
-                        <th>Anzahl Siege</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="total" class="tab-content">
-            <h2>Rangliste Gesamtwertung</h2>
-
-            <table id="rankingTableTotal">
-                <thead>
-                    <tr>
-                        <th>Rang</th>
-                        <th>Team</th>
-                        <th>Punkte</th>
-                        <th>Klasse</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </body>
 </html>
