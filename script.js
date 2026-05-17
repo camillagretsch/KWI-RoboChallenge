@@ -10,8 +10,8 @@ window.teams = [];
 // Excel-Datei laden und Daten aus mehreren Worksheets extrahieren
 // ====================
 fetch('KWI-RoboChallenge_Rangliste.xlsx')
-.then(response => response.arrayBuffer())
-.then(arrayBuffer => {
+    .then(response => response.arrayBuffer())
+    .then(arrayBuffer => {
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
 
@@ -33,8 +33,8 @@ fetch('KWI-RoboChallenge_Rangliste.xlsx')
         createTeamsList(alleDaten['Teams'] || []);
 
     }).catch(error => {
-    console.error('Fehler beim Laden der Excel-Datei:', error);
-});
+        console.error('Fehler beim Laden der Excel-Datei:', error);
+    });
 
 // ====================
 // Tab-Funktionalität
@@ -42,36 +42,42 @@ fetch('KWI-RoboChallenge_Rangliste.xlsx')
 document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
-  
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Alle Tabs und Inhalte deaktivieren
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-  
-        // Aktiven Tab aktivieren
-        tab.classList.add('active');
-        const id = tab.getAttribute('data-tab');
-        document.getElementById(id).classList.add('active');
 
-        if (id === 'linienfolger') createTableLinienfolger();
-        // if (id === 'roboball') createTableRoboball();
-        // if (id === 'move-it-over') createTableMoveItOver();
-        if (id === 'total') createRanglisteTotal();
-      });
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Alle Tabs und Inhalte deaktivieren
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            // Aktiven Tab aktivieren
+            tab.classList.add('active');
+            const id = tab.getAttribute('data-tab');
+            document.getElementById(id).classList.add('active');
+
+            if (id === 'linienfolger') createTableLinienfolger();
+            // if (id === 'roboball') createTableRoboball();
+            // if (id === 'move-it-over') createTableMoveItOver();
+            if (id === 'total') createRanglisteTotal();
+        });
     });
-  });
+
+    const iframe = document.getElementById('mio-spielplan');
+
+    iframe.onload = function () {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    };
+});
 
 // ====================
 // Rangliste Linienfolger
 // ====================
-function createLinienfolgerRangliste(data) {  
+function createLinienfolgerRangliste(data) {
     // gültige Zeiten filtern + numerisch sortieren
     const gueltigeZeiten = data
         .filter(t => t.Zeit !== 'x' && !isNaN(Number(t.Zeit)))
         .sort((a, b) => Number(a.Zeit) - Number(b.Zeit));
     const ungueltigeZeiten = data.filter(t => t.Zeit === 'x');
-  
+
     // Mit Sensor
     const datenMitSensor = gueltigeZeiten.filter(
         entry => entry.Sensor === 'x'
@@ -90,7 +96,7 @@ function createLinienfolgerRangliste(data) {
         Klasse: entry.Klasse,
         Sensor: true
     }));
-  
+
     datenOhneSensor.forEach((entry, i) => {
         rangliste.push({
             Rang: i + 1,
@@ -100,9 +106,9 @@ function createLinienfolgerRangliste(data) {
             Sensor: false
         });
     });
-    
+
     const letzterRang = gueltigeZeiten.length + 1;
-  
+
     ungueltigeZeiten.forEach(entry => {
         rangliste.push({
             Rang: letzterRang,
@@ -131,7 +137,7 @@ function createTableLinienfolger() {
 
     tbodySensor.innerHTML = '';
     tbody.innerHTML = '';
-  
+
     window.linienfolgerDaten.forEach(row => {
         const tr = document.createElement('tr');
         if (row.Sensor) {
@@ -147,8 +153,8 @@ function createTableLinienfolger() {
 // ====================
 // Rangliste RoboBall
 // ====================
-function createRoboballRangliste(data) {  
-  
+function createRoboballRangliste(data) {
+
     // Ränge zuweisen
     const rangliste = data.map((entry, i) => ({
         Rang: i + 1,
@@ -165,7 +171,7 @@ function createRoboballRangliste(data) {
             row.Rang = rangliste[index - 1].Rang;
         }
     });
-  
+
     rangliste.sort((a, b) => a.Rang - b.Rang);
     window.roboballDaten = rangliste;
 }
@@ -176,19 +182,19 @@ function createRoboballRangliste(data) {
 function createTableRoboball() {
     const tbody = document.querySelector('#rankingTableRoboball tbody');
     tbody.innerHTML = '';
-  
+
     window.roboballDaten.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte1}</td><td>${row.Punkte2}</td><td>${row.Punkte3}</td>`;
-      tbody.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte1}</td><td>${row.Punkte2}</td><td>${row.Punkte3}</td>`;
+        tbody.appendChild(tr);
     });
 }
 
 // ====================
 // Rangliste Move it over
 // ====================
-function createMoveItOverRangliste(data) {  
-  
+function createMoveItOverRangliste(data) {
+
     // Ränge zuweisen
     const rangliste = data.map((entry, i) => ({
         Rang: i + 1,
@@ -204,7 +210,7 @@ function createMoveItOverRangliste(data) {
             row.Rang = rangliste[index - 1].Rang;
         }
     });
-  
+
     rangliste.sort((a, b) => a.Rang - b.Rang);
     window.moveItOverDaten = rangliste;
 }
@@ -215,11 +221,11 @@ function createMoveItOverRangliste(data) {
 function createTableMoveItOver() {
     const tbody = document.querySelector('#rankingTableMoveItOver tbody');
     tbody.innerHTML = '';
-  
+
     window.moveItOverDaten.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td><td>${row.Siege}</td>`;
-      tbody.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td><td>${row.Siege}</td>`;
+        tbody.appendChild(tr);
     });
 }
 
@@ -258,10 +264,10 @@ function createRanglisteTotal() {
         const team = row.team;
         const namen = row.namen
         const klasse = row.klasse;
-        team.forEach((member) =>  {
+        team.forEach((member) => {
             punkte += window.linienfolgerDaten.filter(t => t.Gruppennummer === member)[0].Rang;
         });
-        rangliste.push({team, punkte, rang, klasse, namen});
+        rangliste.push({ team, punkte, rang, klasse, namen });
     });
 
     // Roboball & MIO
