@@ -55,16 +55,35 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(id).classList.add('active');
 
             if (id === 'linienfolger') createTableLinienfolger();
-            // if (id === 'roboball') createTableRoboball();
-            // if (id === 'move-it-over') createTableMoveItOver();
+            if (id === 'roboball') createTableRoboball();
+            if (id === 'move-it-over') createTableMoveItOver();
             if (id === 'total') createRanglisteTotal();
         });
     });
 
-    const iframe = document.getElementById('mio-spielplan');
+    document.querySelectorAll('.submenu button').forEach(button => {
+    button.addEventListener('click', function () {
+        const target = document.getElementById(this.dataset.target);
 
-    iframe.onload = function () {
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+    const iframeMIO = document.getElementById('mio-spielplan');
+
+    iframeMIO.onload = function () {
+        iframeMIO.style.height = iframeMIO.contentWindow.document.body.scrollHeight + 'px';
+    };
+
+    const iframeRB = document.getElementById('rb-spielplan');
+
+    iframeRB.onload = function () {
+        iframeRB.style.height = iframeRB.contentWindow.document.body.scrollHeight + 'px';
     };
 });
 
@@ -107,7 +126,7 @@ function createLinienfolgerRangliste(data) {
         });
     });
 
-    const letzterRang = gueltigeZeiten.length + 1;
+    const letzterRang = datenMitSensor.length + 1;
 
     ungueltigeZeiten.forEach(entry => {
         rangliste.push({
@@ -159,15 +178,14 @@ function createRoboballRangliste(data) {
     const rangliste = data.map((entry, i) => ({
         Rang: i + 1,
         Gruppennummer: entry.Gruppennummer,
-        Punkte1: entry.Bester,
-        Punkte2: entry.Zweiter,
-        Punkte3: entry.Dritter,
+        Punkte: entry.Rangpunkte,
+        Tore: entry.Torpunkte,
         Klasse: entry.Klasse,
     }));
 
-    // Falls zwei Teams bei allen Wertungslüfen genau gleich viel Punkte haben, haben sie den selben Rang
+    // Falls zwei Teams genau gleich viel Punkte und Tore haben, haben sie den selben Rang
     rangliste.forEach((row, index) => {
-        if (index > 0 && row.Punkte1 === rangliste[index - 1].Punkte1 && row.Punkte2 === rangliste[index - 1].Punkte2 && row.Punkte3 === rangliste[index - 1].Punkte3) {
+        if (index > 0 && row.Punkte === rangliste[index - 1].Punkte && row.Tore === rangliste[index - 1].Tore) {
             row.Rang = rangliste[index - 1].Rang;
         }
     });
@@ -180,12 +198,12 @@ function createRoboballRangliste(data) {
 // Tabelle RoboBall
 // ====================
 function createTableRoboball() {
-    const tbody = document.querySelector('#rankingTableRoboball tbody');
+    const tbody = document.querySelector('#rankingTableRoboBall tbody');
     tbody.innerHTML = '';
 
     window.roboballDaten.forEach(row => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte1}</td><td>${row.Punkte2}</td><td>${row.Punkte3}</td>`;
+        tr.innerHTML = `<td>${row.Rang}</td><td>${row.Klasse}</td><td>${row.Gruppennummer}</td><td>${row.Punkte}</td><td>${row.Tore}</td>`;
         tbody.appendChild(tr);
     });
 }

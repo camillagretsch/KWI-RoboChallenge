@@ -45,6 +45,36 @@
             color: #1685BB;
         }
 
+        .tab-dropdown {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .tab-dropdown:has(.tab.active):hover .submenu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .submenu button {
+            padding: 8px 12px;
+            border: none;
+            background: #59BFE8;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .submenu button:hover {
+            background: #1685BB;
+        }
+
         /* Tab Inhalte */
         .tab-content {
             display: none;
@@ -103,8 +133,25 @@
 
     <div class="tabs">
         <button class="tab active" data-tab="linienfolger">Linienfolger</button>
-        <button class="tab" data-tab="roboball">RoboBall</button>
-        <button class="tab" data-tab="move-it-over">Move-it-over</button>
+
+        <div class="tab-dropdown">
+            <button class="tab" data-tab="roboball">RoboBall ▾</button>
+            <div class="submenu">
+                <button data-target="roboball-regeln">Regeln</button>
+                <button data-target="roboball-spielplan">Spielplan</button>
+                <button data-target="roboball-resultat">Resultat</button>
+            </div>
+        </div>
+
+        <div class="tab-dropdown">
+            <button class="tab" data-tab="move-it-over">Move-it-over ▾</button>
+            <div class="submenu">
+                <button data-target="move-it-over-regeln">Regeln</button>
+                <button data-target="move-it-over-spielplan">Spielplan</button>
+                <button data-target="move-it-over-resultat">Resultat</button>
+            </div>
+        </div>
+
         <button class="tab" data-tab="total">Gesamtwertung</button>
     </div>
 
@@ -150,7 +197,7 @@
     </div>
 
     <div id="roboball" class="tab-content">
-        <h2>Regeln</h2>
+        <h2 id="roboball-regeln">Regeln</h2>
         <ul>
             <li>Jedes Team nimmt an 6 Spielen teil.</li>
             <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
@@ -161,28 +208,33 @@
             <li>Bei Punktegleichheit entscheidet die höhere Torpunktzahl.</li>
             <li>Zum «Aufladen» muss der Ball innerhalb der Ladezone von Hand senkrecht von oben abgegeben werden.</li>
             <li>Zum Aufladen müssen die beiden Räder vollständig hinter der schwarzen Linie sein.</li>
-            <li>Der Roboter muss sich komplett vor der Ladezone befinden, um einen Ball «abzuladen» (aufs Tor schiessen).</li>
-            <li>Euer Roboter darf immer nur einen Ball pro Mal «abladen». Danach muss euer Roboter wieder in die Ladezone fahren.</li>
-            <li>Berühren sich zwei Roboter, so gewinnt dasjenige Team, in dessen Hälfte die Berührung stattgefunden hat, automatisch das Spiel. Die Anzahl Torpunkte für diesen Fall wird noch bekanntgegeben.</li>
-            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels keine Teile verlieren.</li>
+            <li>Der Roboter muss sich komplett vor der Ladezone befinden, um einen Ball «abzuladen» (aufs Tor
+                schiessen).</li>
+            <li>Euer Roboter darf immer nur einen Ball pro Mal «abladen». Danach muss euer Roboter wieder in die
+                Ladezone fahren.</li>
+            <li>Berühren sich zwei Roboter, so gewinnt dasjenige Team, in dessen Hälfte die Berührung stattgefunden hat,
+                automatisch das Spiel. Die Anzahl Torpunkte für diesen Fall wird noch bekanntgegeben.</li>
+            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels
+                keine Teile verlieren.</li>
         </ul>
-        <h4>Punkteverteilung</h4>   
+        <h4>Punkteverteilung</h4>
         <ul>
             <li>Tor in der eigenen Hälfte – 1 Torpunkt</li>
             <li>Tor in der Mitte – 3 Torpunkte</li>
             <li>Tor in der gegnerischen Hälfte – 5 Torpunkte</li>
         </ul>
-        <!-- <h>Spielplan</h> -->
-        <!-- <h2>Rangliste</h2> -->
-        <!-- <table id="rankingTableRoboball">
+        <h2 id="roboball-spielplan">Spielplan</h2>
+        <iframe style="width:100%; border:0" src="./RB_Spielplan.html" id="rb-spielplan"></iframe>
+
+        <h2 id="roboball-resultat">Rangliste</h2>
+        <!-- <table id="rankingTableRoboBall">
             <thead>
                 <tr>
                     <th>Rang</th>
                     <th>Klasse</th>
                     <th>Gruppennummer</th>
-                    <th>Beste Wertung</th>
-                    <th>2. Wertung</th>
-                    <th>3. Wertung</th>
+                    <th>Punkte</th>
+                    <th>Tore</th>
                 </tr>
             </thead>
             <tbody>
@@ -191,7 +243,7 @@
     </div>
 
     <div id="move-it-over" class="tab-content">
-        <h2>Regeln</h2>
+        <h2 id="move-it-over-regeln">Regeln</h2>
         <ul>
             <li>Jedes Team nimmt an 6 Spielen teil.</li>
             <li>Jeder Match ist ein Zweikampf, bei dem zwei 2/3er Teams gegeneinander antreten.</li>
@@ -203,7 +255,8 @@
             <li>Beim Spielstart hat es auf beiden Spielfeldern je 10 Bälle.</li>
             <li>Wird ein Ball von der Spielplatte befördert, so wird dieser Ball beim Spielende wieder ins Spielfeld vom
                 Roboter, der ihn zuletzt berührt hat gelegt.</li>
-            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels keine Teile verlieren.</li>
+            <li>Die Roboter dürfen nur mit Legosteinen aus einer gelben Box gebaut werden und dürfen während des Spiels
+                keine Teile verlieren.</li>
         </ul>
         <h4>Punkteverteilung</h4>
         <ul>
@@ -214,9 +267,9 @@
             <li>14 und 16 Ball Differenz → Sieger 9 Punkte & Verlierer 1 Punkt</li>
             <li>18 und 20 Ball Differenz → Sieger 10 Punkte & Verlierer 0 Punkte</li>
         </ul>
-        <h2>Spieplan</h2>
-        <iframe style="width:100%; border:0" src="./MIO_Spielplan.html" id="mio-spielplan"></iframe>
-        <!-- <h2>Rangliste</h2> -->
+        <h2 id="move-it-over-spielplan">Spieplan</h2>
+        <iframe style="width:100%; border:0; overflow: hidden;" src="./MIO_Spielplan.html" id="mio-spielplan"></iframe>
+        <h2 id="move-it-over-resultat">Rangliste</h2>
         <!-- <table id="rankingTableMoveItOver">
             <thead>
                 <tr>
