@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(id).classList.add('active');
 
             if (id === 'linienfolger') createTableLinienfolger();
-            if (id === 'roboball') createTableRoboball();
-            if (id === 'move-it-over') createTableMoveItOver();
+            // if (id === 'roboball') createTableRoboball();
+            // if (id === 'move-it-over') createTableMoveItOver();
             if (id === 'total') createRanglisteTotal();
         });
     });
