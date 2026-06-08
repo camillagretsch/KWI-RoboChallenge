@@ -55,37 +55,33 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(id).classList.add('active');
 
             if (id === 'linienfolger') createTableLinienfolger();
-            // if (id === 'roboball') createTableRoboball();
-            // if (id === 'move-it-over') createTableMoveItOver();
+            if (id === 'roboball') createTableRoboball();
+            if (id === 'move-it-over') createTableMoveItOver();
             if (id === 'total') createRanglisteTotal();
         });
     });
 
     document.querySelectorAll('.submenu button').forEach(button => {
-    button.addEventListener('click', function () {
-        const target = document.getElementById(this.dataset.target);
+        button.addEventListener('click', function () {
+            const target = document.getElementById(this.dataset.target);
 
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 });
 
-    const iframeMIO = document.getElementById('mio-spielplan');
+function resizeIframeById(id) {
+    const iframe = document.getElementById(id);
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
 
-    iframeMIO.onload = function () {
-        iframeMIO.style.height = iframeMIO.contentWindow.document.body.scrollHeight + 'px';
-    };
-
-    const iframeRB = document.getElementById('rb-spielplan');
-
-    iframeRB.onload = function () {
-        iframeRB.style.height = iframeRB.contentWindow.document.body.scrollHeight + 'px';
-    };
-});
+    iframe.style.height = 'auto';
+    iframe.style.height = doc.documentElement.scrollHeight + 'px';
+}
 
 // ====================
 // Rangliste Linienfolger
@@ -198,6 +194,7 @@ function createRoboballRangliste(data) {
 // Tabelle RoboBall
 // ====================
 function createTableRoboball() {
+    resizeIframeById("rb-spielplan")
     const tbody = document.querySelector('#rankingTableRoboBall tbody');
     tbody.innerHTML = '';
 
@@ -237,6 +234,7 @@ function createMoveItOverRangliste(data) {
 // Tabelle Move it over
 // ====================
 function createTableMoveItOver() {
+    resizeIframeById("mio-spielplan")
     const tbody = document.querySelector('#rankingTableMoveItOver tbody');
     tbody.innerHTML = '';
 
