@@ -28,8 +28,8 @@ fetch('KWI-RoboChallenge_Rangliste.xlsx')
 
         createLinienfolgerRangliste(alleDaten['Linienfolger-Resultate'] || []);
         createTableLinienfolger();
-        // createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
-        // createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
+        createRoboballRangliste(alleDaten['RoboBall-Rangliste'] || []);
+        createMoveItOverRangliste(alleDaten['Move-it-over-Rangliste'] || []);
         createTeamsList(alleDaten['Teams'] || []);
 
     }).catch(error => {
@@ -287,25 +287,25 @@ function createRanglisteTotal() {
     });
 
     // Roboball & MIO
-    // rangliste.forEach(row => {
-    //     let punkte = row.punkte;
+    rangliste.forEach(row => {
+        let punkte = row.punkte;
 
-    //     row.team.forEach((member) => {
-    //         // Roboball
-    //         let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
-    //         if (data.length > 0) {
-    //             punkte += data[0].Rang
-    //         }
+        row.team.forEach((member) => {
+            // Roboball
+            let data = window.roboballDaten.filter(t => t.Gruppennummer === member);
+            if (data.length > 0) {
+                punkte += data[0].Rang
+            }
 
-    //         // MIO
-    //         data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
-    //         if (data.length > 0) {
-    //             punkte += data[0].Rang
-    //         }
+            // MIO
+            data = window.moveItOverDaten.filter(t => t.Gruppennummer === member);
+            if (data.length > 0) {
+                punkte += data[0].Rang
+            }
 
-    //         row.punkte = punkte.toFixed(1);
-    //     })
-    // });
+            row.punkte = punkte.toFixed(1);
+        })
+    });
 
     rangliste.sort((a, b) => a.punkte - b.punkte);
 
